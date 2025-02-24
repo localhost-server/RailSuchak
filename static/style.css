@@ -1,0 +1,261 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #1a1a1a;
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    overflow: hidden;
+}
+
+.conversation-wrapper {
+    width: 100%;
+    max-width: 800px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    background: rgba(26, 26, 26, 0.95);
+    padding: 40px;
+    position: relative;
+    backdrop-filter: blur(10px);
+}
+
+.circle {
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: #2c2c2c;
+    box-shadow: 0 0 30px rgba(52, 152, 219, 0.3);
+    transition: transform 0.3s ease;
+    position: relative;
+    cursor: pointer;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    animation: circleBorderColor 8s linear infinite;
+}
+
+.circle:hover {
+    transform: scale(1.05);
+}
+
+.circle::before {
+    content: '';
+    position: absolute;
+    width: 94%;
+    height: 94%;
+    border-radius: 50%;
+    background: #2c2c2c;
+    opacity: 1;
+    z-index: 1;
+}
+
+.circle::after {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background: linear-gradient(45deg, 
+        #ff0000, #ff4000, #ff8000, #ffbf00, 
+        #ffff00, #bfff00, #80ff00, #40ff00, 
+        #00ff00, #00ff40, #00ff80, #00ffbf, 
+        #00ffff, #00bfff, #0080ff, #0040ff, 
+        #0000ff, #4000ff, #8000ff, #bf00ff,
+        #ff00ff, #ff00bf, #ff0080, #ff0040,
+        #ff0000);
+    animation: rotateGradient 8s linear infinite;
+    z-index: 0;
+}
+
+@keyframes rotateGradient {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes circleBorderColor {
+    0%, 100% {
+        box-shadow: 0 0 30px rgba(52, 152, 219, 0.5);
+    }
+    25% {
+        box-shadow: 0 0 30px rgba(46, 204, 113, 0.5);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(231, 76, 60, 0.5);
+    }
+    75% {
+        box-shadow: 0 0 30px rgba(155, 89, 182, 0.5);
+    }
+}
+
+.wave {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid #3498db;
+    opacity: 0.6;
+    transform: scale(0.8);
+}
+
+/* Animation states */
+.listening .wave {
+    animation: pulse 1.5s infinite;
+}
+
+.processing .wave {
+    animation: spin 1s infinite linear;
+}
+
+.speaking .wave {
+    animation: wave 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(0.8); opacity: 0.3; }
+    50% { transform: scale(0.9); opacity: 0.5; }
+    100% { transform: scale(0.8); opacity: 0.3; }
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg) scale(0.8); }
+    to { transform: rotate(360deg) scale(0.8); }
+}
+
+@keyframes wave {
+    0% { transform: scale(0.8) rotate(0deg); }
+    25% { transform: scale(0.85) rotate(45deg); }
+    50% { transform: scale(0.8) rotate(90deg); }
+    75% { transform: scale(0.85) rotate(45deg); }
+    100% { transform: scale(0.8) rotate(0deg); }
+}
+
+#status-text {
+    color: #ffffff;
+    font-size: 24px;
+    font-weight: 500;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    pointer-events: none;
+    text-align: center;
+    width: 100%;
+    padding: 0 20px;
+    animation: textRainbow 8s linear infinite;
+}
+
+@keyframes textRainbow {
+    0%, 100% {
+        color: #ff0000;
+        text-shadow: 0 0 15px rgba(255, 0, 0, 0.8),
+                     0 0 25px rgba(255, 0, 0, 0.5);
+    }
+    20% {
+        color: #ffff00;
+        text-shadow: 0 0 15px rgba(255, 255, 0, 0.8),
+                     0 0 25px rgba(255, 255, 0, 0.5);
+    }
+    40% {
+        color: #00ff00;
+        text-shadow: 0 0 15px rgba(0, 255, 0, 0.8),
+                     0 0 25px rgba(0, 255, 0, 0.5);
+    }
+    60% {
+        color: #00ffff;
+        text-shadow: 0 0 15px rgba(0, 255, 255, 0.8),
+                     0 0 25px rgba(0, 255, 255, 0.5);
+    }
+    80% {
+        color: #ff00ff;
+        text-shadow: 0 0 15px rgba(255, 0, 255, 0.8),
+                     0 0 25px rgba(255, 0, 255, 0.5);
+    }
+}
+
+.circle:hover #status-text {
+    animation: textRainbow 4s linear infinite;
+    font-size: 26px;
+    transition: font-size 0.3s ease;
+}
+
+#transcript {
+    width: 100%;
+    max-width: 600px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 20px;
+    position: relative;
+}
+
+.message {
+    color: #cccccc;
+    width: auto;
+    min-width: 200px;
+    max-width: 80%;
+    text-align: center;
+    padding: 25px 40px;
+    border-radius: 100px;
+    background: rgba(52, 152, 219, 0.1);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(5px);
+    margin: 0 auto;
+    display: inline-block;
+}
+
+.message.user {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.15), rgba(52, 152, 219, 0.1));
+}
+
+.message.assistant {
+    background: linear-gradient(135deg, rgba(52, 152, 219, 0.1), rgba(52, 152, 219, 0.15));
+}
+
+.message strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #3498db;
+}
+
+/* Scrollbar styling */
+#transcript::-webkit-scrollbar {
+    width: 8px;
+}
+
+#transcript::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+#transcript::-webkit-scrollbar-thumb {
+    background: #3498db;
+    border-radius: 4px;
+}
+
+#transcript::-webkit-scrollbar-thumb:hover {
+    background: #2980b9;
+}
