@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function resetUI() {
         isListening = false;
         updateState('idle');
-        statusText.textContent = 'Click to start';
         transcript.innerHTML = '';
     }
 
@@ -30,6 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
         socket.on('connect', () => {
             console.log('Connected to server');
             resetUI();
+            // Auto-start listening
+            socket.emit('start_listening');
+            updateState('listening');
+            isListening = true;
         });
 
         socket.on('disconnect', () => {
@@ -39,7 +42,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         socket.on('status', (data) => {
             console.log('Status update:', data);
-            statusText.textContent = data.message;
+            let message = data.state === 'listening' ? 'Listening...' :
+                         data.state === 'processing' ? 'Processing...' :
+                         data.state === 'speaking' ? 'Speaking...' : '';
+            statusText.textContent = message;
             updateState(data.state);
             
             if (data.state === 'listening') {
@@ -111,27 +117,18 @@ document.addEventListener('DOMContentLoaded', () => {
     voiceCircle.addEventListener('click', handleClick);
     setupSocket();  // Initial socket setup
 
-    // Handle page visibility and reload
+    // Handle page visibility
     document.addEventListener('visibilitychange', () => {
-        if (document.visibilityState === 'visible') {
-            console.log('Page became visible - reconnecting');
-            setupSocket();  // Reconnect and reset when page becomes visible
+        if (document.visibilityState === 'hidden') {
+            console.log('Page hidden - disconnecting');
+            socket.emit('stop_listening');
+            socket.disconnect();
         }
-    });
-
-    window.addEventListener('pageshow', (event) => {
-        console.log('Page show event - resetting connection');
-        setupSocket();  // Reset connection on page show (including back/forward navigation)
-    });
-
-    // Handle page reload through refresh
-    window.addEventListener('load', () => {
-        console.log('Page loaded - setting up fresh connection');
-        setupSocket();
     });
 
     // Handle page unload
     window.addEventListener('beforeunload', () => {
+        console.log('Page unloading - disconnecting');
         socket.emit('stop_listening');
         socket.disconnect();
     });

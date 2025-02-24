@@ -274,10 +274,14 @@ Just ask me naturally, for example 'Find trains from Delhi to Mumbai' or 'Check 
                 raise ValueError("ElevenLabs API key not found")
 
             print("Creating new conversation instance...")
-            self.conversation = Conversation.from_agent(
+            self.audio_interface = SafeAudioInterface()
+            self.conversation = Conversation(
                 self.client,
                 AGENT_ID,
-                requires_auth=bool(API_KEY)
+                requires_auth=bool(API_KEY),
+                audio_interface=self.audio_interface,
+                callback_agent_response=lambda response: print(f"Agent: {response}"),
+                callback_user_transcript=lambda transcript: print(f"User: {transcript}")
             )
 
             print("Starting session...")
