@@ -66,6 +66,10 @@ class VoiceAssistant:
         self._shutdown = threading.Event()
         self.train_service = TrainService()
         self.conversation_context = {}
+        
+        # Event emitters for socket.io events
+        self._emit_transcript = None
+        self._emit_status = None
 
     def force_cleanup(self):
         """Force cleanup of all resources"""
@@ -263,39 +267,24 @@ Just ask me naturally, for example 'Find trains from Delhi to Mumbai' or 'Check 
             return handle_error_response(error_msg)
 
     def start_conversation(self) -> Optional[Conversation]:
-        """Start a new conversation session with webhook processing"""
+        """Start a new conversation session"""
         print("Starting new conversation session...")
-        self._shutdown.clear()
-        
         try:
-            # Ensure clean slate
-            self.cleanup()
-            time.sleep(0.5)  # Wait for cleanup to complete
-            
-            print("Creating new audio interface...")
-            self.audio_interface = SafeAudioInterface()
-            time.sleep(0.2)  # Wait for audio interface to initialize
-            
-            print("Creating new conversation instance...")
-            # Initialize conversation exactly like the demo
             if not API_KEY:
                 raise ValueError("ElevenLabs API key not found")
 
-            # Minimal initialization - let server handle greetings and events
-            self.conversation = Conversation(
+            print("Creating new conversation instance...")
+            self.conversation = Conversation.from_agent(
                 self.client,
                 AGENT_ID,
-                audio_interface=self.audio_interface,
-                requires_auth=bool(API_KEY),
-                webhook=lambda transcript: self._handle_webhook(transcript)
+                requires_auth=bool(API_KEY)
             )
-            
-            # Start session
+
+            print("Starting session...")
             self.conversation.start_session()
-            signal.signal(signal.SIGINT, lambda sig, frame: self.conversation.end_session())
             print("Conversation started successfully")
             return self.conversation
-            
+
         except Exception as e:
             print(f"Error starting conversation: {str(e)}", file=sys.stderr)
             self.cleanup()
@@ -304,27 +293,7 @@ Just ask me naturally, for example 'Find trains from Delhi to Mumbai' or 'Check 
     def is_active(self) -> bool:
         """Check if conversation is active"""
         return self.conversation is not None and not self._shutdown.is_set()
-
-    def _handle_webhook(self, transcript: str):
-        """Handle webhook callbacks safely"""
-        try:
-            if not self.is_active():
-                print("Webhook called but conversation is not active")
-                return
-                
-            response = asyncio.run(self.process_train_query(transcript))
-            if response and self.conversation:
-                print("Sending response:", response[:100] + "..." if len(response) > 100 else response)
-                self.conversation.say(response)
-            else:
-                print("No response generated or conversation ended")
-                
-        except Exception as e:
-            print(f"Error in webhook handler: {str(e)}", file=sys.stderr)
-            error_msg = "I apologize, but I encountered an error. Could you please try again?"
-            if self.conversation:
-                self.conversation.say(error_msg)
-
+    
 # Register cleanup on process exit
 atexit.register(kill_process_tree)
 

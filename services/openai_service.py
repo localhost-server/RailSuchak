@@ -14,6 +14,10 @@ api_key = os.getenv('OPENAI_API_KEY')
 if not api_key:
     raise ValueError("OPENAI_API_KEY not found in environment variables")
 
+# Convert API key format if needed
+if api_key.startswith('sk-proj-'):
+    api_key = api_key.split('-o2WShBhmJnQC8JXCbSdoSQyv_lVQxJ6Bi_pDjqfpT3BlbkFJGD58LIuJdKeUXwaCfGfyz16s1t5Pr6fgdeKdRagfq3fKP81qexyz2UyOrUPTH7d_F_b9x2260A')[0]
+
 client = OpenAI(api_key=api_key)
 
 def convert_relative_date(date_str: str) -> str:

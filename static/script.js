@@ -54,13 +54,31 @@ document.addEventListener('DOMContentLoaded', () => {
             messageDiv.className = `message ${data.type}`;
             messageDiv.innerHTML = `<strong>${data.type === 'user' ? 'You' : 'Assistant'}:</strong> ${data.text}`;
             
-            // Keep only the last 2 messages
+            // Keep only the last 4 messages
             const messages = transcript.getElementsByClassName('message');
-            if (messages.length >= 2) {
-                transcript.innerHTML = '';
+            while (messages.length >= 4) {
+                const oldestMessage = messages[0];
+                oldestMessage.classList.add('fade-out');
+                setTimeout(() => {
+                    if (oldestMessage.parentNode === transcript) {
+                        transcript.removeChild(oldestMessage);
+                    }
+                }, 1000);
             }
+            
             transcript.appendChild(messageDiv);
-            transcript.scrollTop = transcript.scrollHeight;
+            
+            // Auto-cleanup after 30 seconds
+            setTimeout(() => {
+                if (messageDiv.parentNode === transcript) {
+                    messageDiv.classList.add('fade-out');
+                    setTimeout(() => {
+                        if (messageDiv.parentNode === transcript) {
+                            transcript.removeChild(messageDiv);
+                        }
+                    }, 1000);
+                }
+            }, 30000);
         });
 
         socket.on('error', (error) => {

@@ -95,32 +95,37 @@ def handle_start_listening():
     try:
         cleanup_session(session_id)  # Clean up any existing session
         assistants[session_id] = VoiceAssistant()  # Create new assistant
-            
-        # Start a new conversation session
+        
         with thread_lock:
+            # Get assistant for this session
             assistant = assistants.get(session_id)
             if assistant:
-                # Register socket event handlers for status updates
+                # Wrap conversation events to ensure they run in the socket context
+                @copy_current_request_context
+                def emit_status(state, message):
+                    print(f"Status update: {state} - {message}")
+                    socketio.emit('status', {'state': state, 'message': message}, room=session_id)
+
+                @copy_current_request_context
                 def emit_transcript(text, is_user):
                     print(f"Transcript: {'User' if is_user else 'Assistant'} - {text}")
-                    emit('transcript', {
+                    socketio.emit('transcript', {
                         'type': 'user' if is_user else 'assistant',
                         'text': text
-                    })
-                
-                def emit_status(state, message):
-                    print(f"Status: {state} - {message}")
-                    emit('status', {'state': state, 'message': message})
+                    }, room=session_id)
 
-                # Start conversation with event handlers
+                # Start conversation
                 conversation = assistant.start_conversation()
                 if conversation:
-                    emit('status', {'state': 'listening', 'message': 'Listening...'})
+                    emit_status('listening', 'Listening...')
+                    
+                        # Start audio interface
+                    conversation.start_listening()
                     return
 
             # If we get here, something went wrong
             cleanup_session(session_id)
-            emit('status', {'state': 'idle', 'message': 'Failed to start. Please try again.'})
+            emit_status('error', 'Failed to start conversation')
             
     except Exception as e:
         print(f"Error in start_listening: {str(e)}", file=sys.stderr)
