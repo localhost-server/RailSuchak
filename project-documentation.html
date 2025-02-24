@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RailVoice Assistant Documentation</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --text-color: #1f2937;
+            --bg-color: #f8fafc;
+            --code-bg: #1e293b;
+            --border-color: #e2e8f0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: var(--bg-color);
+            padding: 2rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: 2rem;
+            color: var(--secondary-color);
+            margin: 2rem 0 1rem;
+            padding-top: 1rem;
+        }
+
+        h3 {
+            font-size: 1.5rem;
+            color: var(--secondary-color);
+            margin: 1.5rem 0 1rem;
+        }
+
+        p {
+            margin-bottom: 1rem;
+        }
+
+        ul, ol {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+        }
+
+        li {
+            margin-bottom: 0.5rem;
+        }
+
+        code {
+            font-family: 'Fira Code', 'Courier New', Courier, monospace;
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        pre {
+            background: var(--code-bg);
+            color: #e2e8f0;
+            padding: 1rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        pre code {
+            padding: 0;
+            background: none;
+        }
+
+        .mermaid {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin: 1rem 0;
+        }
+
+        blockquote {
+            border-left: 4px solid var(--primary-color);
+            padding-left: 1rem;
+            margin: 1rem 0;
+            color: #4b5563;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1rem 0;
+        }
+
+        th, td {
+            padding: 0.75rem;
+            border: 1px solid var(--border-color);
+        }
+
+        th {
+            background: #f1f5f9;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            h1 {
+                font-size: 2rem;
+            }
+
+            h2 {
+                font-size: 1.75rem;
+            }
+
+            h3 {
+                font-size: 1.25rem;
+            }
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>RailVoice Assistant</h1>
+        <p>A cutting-edge AI-powered voice assistant developed for the ElevenLabs AI Hackathon 2024, designed to revolutionize railway travel assistance and station announcements.</p>
+
+        <h2>Project Overview</h2>
+        <p>RailVoice Assistant addresses the critical need for seamless, intuitive railway information access and automated station announcements. By leveraging advanced AI technologies, it provides natural voice interactions for railway queries and real-time announcements, making train travel more accessible and efficient for everyone.</p>
+
+        <h3>Problem Statement</h3>
+        <p>Railway tourists and travelers often face challenges in:</p>
+        <ul>
+            <li>Getting real-time train information</li>
+            <li>Understanding station announcements</li>
+            <li>Checking PNR status and seat availability</li>
+            <li>Navigating complex railway systems in unfamiliar locations</li>
+        </ul>
+        <p>RailVoice Assistant solves these problems by providing an intuitive voice interface that handles queries naturally and makes clear, timely announcements for upcoming and ongoing trains at stations.</p>
+
+        <h2>Team Information</h2>
+        <ul>
+            <li><strong>Anshu K.</strong> - Lead Developer & Project Architect
+                <ul>
+                    <li>Conceptualized and developed the entire solution</li>
+                    <li>Implemented AI integration and voice processing</li>
+                    <li>Designed the system architecture</li>
+                    <li>Developed the backend services and API integrations</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h2>UI Architecture</h2>
+        <h3>HTML Structure</h3>
+        <div class="mermaid">
+graph TB
+    subgraph DOM_Structure
+        HTML[HTML]
+        Body[Body]
+        Container[Container]
+        ConvWrapper[Conversation Wrapper]
+        Circle[Circle div]
+        Wave[Wave Animation]
+        Status[Status Text]
+        Transcript[Transcript Container]
+        Messages[Messages]
+
+        HTML --> Body
+        Body --> Container
+        Container --> ConvWrapper
+        ConvWrapper --> Circle
+        Circle --> Wave
+        Circle --> Status
+        ConvWrapper --> Transcript
+        Transcript --> Messages
+    end
+
+    style HTML fill:#f9f,stroke:#333,stroke-width:2px
+    style Body fill:#bbf,stroke:#333,stroke-width:2px
+    style Container fill:#bfb,stroke:#333,stroke-width:2px
+    style ConvWrapper fill:#fbb,stroke:#333,stroke-width:2px
+        </div>
+
+        <h2>Technical Architecture</h2>
+        <h3>System Architecture</h3>
+        <div class="mermaid">
+graph TB
+    subgraph Frontend
+        UI[Web Interface]
+        WS[WebSocket Client]
+        Audio[Audio Handler]
+    end
+
+    subgraph Backend
+        Server[Flask Server]
+        SocketIO[Flask-SocketIO]
+        Session[Session Manager]
+        ErrorH[Error Handler]
+    end
+
+    subgraph AI Services
+        ElevenLabs[ElevenLabs AI]
+        OpenAI[OpenAI GPT-4]
+        NLP[NLP Engine]
+    end
+
+    subgraph External APIs
+        IRCTC[IRCTC API]
+        TrainDB[Train Database]
+        StationDB[Station Database]
+    end
+
+    UI --> WS
+    WS --> Audio
+    Audio --> Server
+    Server --> SocketIO
+    SocketIO --> Session
+    Server --> ErrorH
+    Server --> ElevenLabs
+    Server --> OpenAI
+    OpenAI --> NLP
+    Server --> IRCTC
+    IRCTC --> TrainDB
+    IRCTC --> StationDB
+        </div>
+
+        <h2>Features & Capabilities</h2>
+        <ol>
+            <li><strong>Natural Language Queries</strong>
+                <ul>
+                    <li>Train schedules</li>
+                    <li>PNR status</li>
+                    <li>Seat availability</li>
+                    <li>Platform information</li>
+                    <li>Fare enquiries</li>
+                </ul>
+            </li>
+            <li><strong>Real-Time Information</strong>
+                <ul>
+                    <li>Live train status</li>
+                    <li>Delay notifications</li>
+                    <li>Platform changes</li>
+                    <li>Emergency updates</li>
+                </ul>
+            </li>
+        </ol>
+
+        <h2>Getting Started</h2>
+        <h3>Prerequisites</h3>
+        <ul>
+            <li>Python 3.x</li>
+            <li>PyAudio (required for voice input)</li>
+            <li>API keys for:
+                <ul>
+                    <li>ElevenLabs</li>
+                    <li>OpenAI</li>
+                    <li>RapidAPI</li>
+                </ul>
+            </li>
+        </ul>
+
+        <h3>Installation</h3>
+        <ol>
+            <li>Clone the repository</li>
+            <li>Install dependencies:
+                <pre><code>pip install -r requirements.txt</code></pre>
+                <p>Note: On Linux, you might need to install portaudio first:</p>
+                <pre><code>sudo apt-get install python3-pyaudio</code></pre>
+            </li>
+            <li>Set up environment variables in <code>.env</code>:
+                <pre><code># API Keys
+ELEVEN_LABS_API_KEY="your_elevenlabs_key"
+OPENAI_API_KEY="your_openai_key"
+RAPIDAPI_KEY="your_rapidapi_key"
+
+# Server Configuration
+API_ENDPOINT=http://localhost:5000/query
+PORT=5000
+DEBUG=True</code></pre>
+            </li>
+            <li>Run the server:
+                <pre><code>python server.py</code></pre>
+            </li>
+            <li>Access the application at <code>http://localhost:5000</code></li>
+        </ol>
+
+        <h2>License</h2>
+        <p>This project is part of the ElevenLabs AI Hackathon 2024. All rights reserved.</p>
+    </div>
+</body>
+</html>

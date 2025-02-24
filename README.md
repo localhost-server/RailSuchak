@@ -24,6 +24,166 @@ RailVoice Assistant solves these problems by providing an intuitive voice interf
   - Designed the system architecture
   - Developed the backend services and API integrations
 
+## UI Architecture
+
+### HTML Structure
+
+```mermaid
+graph TB
+    subgraph DOM_Structure
+        HTML[HTML]
+        Body[Body]
+        Container[Container]
+        ConvWrapper[Conversation Wrapper]
+        Circle[Circle div]
+        Wave[Wave Animation]
+        Status[Status Text]
+        Transcript[Transcript Container]
+        Messages[Messages]
+
+        HTML --> Body
+        Body --> Container
+        Container --> ConvWrapper
+        ConvWrapper --> Circle
+        Circle --> Wave
+        Circle --> Status
+        ConvWrapper --> Transcript
+        Transcript --> Messages
+    end
+
+    style HTML fill:#f9f,stroke:#333,stroke-width:2px
+    style Body fill:#bbf,stroke:#333,stroke-width:2px
+    style Container fill:#bfb,stroke:#333,stroke-width:2px
+    style ConvWrapper fill:#fbb,stroke:#333,stroke-width:2px
+```
+
+### UI Components
+
+```mermaid
+graph LR
+    subgraph Circle_Component
+        Circle[Circle Container]
+        Wave[Wave Animation]
+        Status[Status Text]
+    end
+
+    subgraph Message_System
+        Transcript[Transcript Container]
+        UserMsg[User Messages]
+        AIMsg[Assistant Messages]
+        Fade[Fade Animation]
+    end
+
+    subgraph States
+        Listening[Listening State]
+        Processing[Processing State]
+        Speaking[Speaking State]
+    end
+
+    Circle --> Wave
+    Circle --> Status
+    Circle --> States
+    Transcript --> UserMsg
+    Transcript --> AIMsg
+    UserMsg --> Fade
+    AIMsg --> Fade
+
+    style Circle_Component fill:#f9f,stroke:#333,stroke-width:2px
+    style Message_System fill:#bbf,stroke:#333,stroke-width:2px
+    style States fill:#bfb,stroke:#333,stroke-width:2px
+```
+
+### Message Display Flow
+
+```mermaid
+sequenceDiagram
+    participant UI as User Interface
+    participant Circle as Circle Component
+    participant Status as Status Text
+    participant Messages as Message Container
+    participant Animation as Animation System
+
+    UI->>Circle: User Speaks
+    Circle->>Status: Update Status "Listening..."
+    Note over Circle: Wave Animation Starts
+    UI->>Messages: Create User Message
+    Note over Messages: Fade In Animation
+    Messages->>Animation: Start 30s Timer
+    Note over Messages: Keep Last 4 Messages
+    UI->>Messages: Create Assistant Message
+    Note over Messages: Fade In Animation
+    Messages->>Animation: Start 30s Timer
+    Animation->>Messages: Fade Out After 30s
+    Messages->>Messages: Remove Old Message
+```
+
+### CSS Styling Structure
+
+```mermaid
+graph TB
+    subgraph Layout
+        Body[Body Styles]
+        Container[Container Styles]
+        ConvWrapper[Conversation Wrapper]
+    end
+
+    subgraph Components
+        Circle[Circle Styles]
+        Wave[Wave Animation]
+        Status[Status Text]
+        Messages[Message Styles]
+    end
+
+    subgraph Animations
+        Pulse[Pulse Animation]
+        Spin[Spin Animation]
+        WaveAnim[Wave Animation]
+        FadeIn[Fade In]
+        FadeOut[Fade Out]
+    end
+
+    Body --> Container
+    Container --> ConvWrapper
+    ConvWrapper --> Circle
+    Circle --> Wave
+    Circle --> Status
+    ConvWrapper --> Messages
+    
+    Wave --> Pulse
+    Wave --> Spin
+    Wave --> WaveAnim
+    Messages --> FadeIn
+    Messages --> FadeOut
+
+    style Layout fill:#f9f,stroke:#333,stroke-width:2px
+    style Components fill:#bbf,stroke:#333,stroke-width:2px
+    style Animations fill:#bfb,stroke:#333,stroke-width:2px
+```
+
+### Message Display Flow
+
+```mermaid
+sequenceDiagram
+    participant UI as User Interface
+    participant Circle as Circle Component
+    participant Status as Status Text
+    participant Messages as Message Container
+    participant Animation as Animation System
+
+    UI->>Circle: User Speaks
+    Circle->>Status: Update Status "Listening..."
+    Note over Circle: Wave Animation Starts
+    UI->>Messages: Create User Message
+    Note over Messages: Fade In Animation
+    Messages->>Animation: Start 30s Timer
+    Note over Messages: Keep Last 4 Messages
+    UI->>Messages: Create Assistant Message
+    Note over Messages: Fade In Animation
+    Messages->>Animation: Start 30s Timer
+    Animation->>Messages: Fade Out After 30s
+    Messages->>Messages: Remove Old Message
+```
+
 ## Technical Architecture
 
 ### System Architecture
