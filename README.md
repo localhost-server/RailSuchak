@@ -1,6 +1,6 @@
 # RailVoice Assistant
 
-A cutting-edge AI-powered voice assistant developed for the ElevenLabs AI Hackathon 2024, designed to revolutionize railway travel assistance and station announcements.
+A cutting-edge AI-powered voice assistant developed for the ElevenLabs AI Hackathon 2025, designed to revolutionize railway travel assistance and station announcements.
 
 ## Project Overview
 
@@ -478,4 +478,4 @@ We welcome contributions to improve RailVoice Assistant. Please feel free to sub
 
 ## License
 
-This project is part of the ElevenLabs AI Hackathon 2024. All rights reserved.
+This project is part of the ElevenLabs AI Hackathon 2025. All rights reserved.
